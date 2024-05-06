@@ -46,5 +46,7 @@ SharedPtrTest::run()
     // Recommend usage to create control block for shared_ptr
     // 1. direct use of new
     std::shared_ptr<Widget> spw5(new Widget, loggingDel); // create control block for *pw
-    std::shared_ptr<Widget> spw6(spw5); //spw6 uses smae control block as spw5
+    std::shared_ptr<Widget> spw6(spw5); //spw6 uses same control block as spw5
+
+    auto spwFac = WidgetFac::create();
 }
