@@ -4,24 +4,24 @@
 
 using WidgetId = unsigned; 
 
-static int currentId;
+static WidgetId  currentId;
 
-class Widget : public std::enable_shared_from_this<Widget> {
+
+class Widget: public std::enable_shared_from_this<Widget>{
 public:
-    Widget(): _id(currentId++){}
-    
-    Widget(WidgetId id): _id(id){ currentId = _id; }
-    
-    int getId() const { return _id; }
+    Widget();
+    Widget(WidgetId id);
+    ~Widget();
+
+    WidgetId getId() const;
     
     void makeLogEntry() const;
     
     void process(); 
 
 private:
-
-    int _id;
-    std::vector<std::shared_ptr<Widget>> _processedWidgets; 
+    class WidgetImpl;
+    std::unique_ptr<WidgetImpl> _impl; // pimpl idiom
 };
 
 class WidgetFac : public std::enable_shared_from_this<WidgetFac> {
