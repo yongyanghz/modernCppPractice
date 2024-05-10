@@ -4,6 +4,7 @@
 #include "uniquePtrTest.h"
 #include "sharedPtrTest.h"
 #include "weakPtrTest.h"
+#include "moveForwardTest.h"
 
 int main(int argc, const char * argv[]) {
     // UniquePtrTest upTest;
@@ -11,7 +12,10 @@ int main(int argc, const char * argv[]) {
     // SharedPtrTest spTest;
     // spTest.run();  
     WeakPtrTest wpTest;
-    wpTest.run();  
+    wpTest.run();
+
+    MoveForwardTest mfTest;
+    mfTest.run();  
     return 0;
 }
 

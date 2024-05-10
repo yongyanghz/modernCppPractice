@@ -7,6 +7,8 @@
 #include "realEstate.h"
 #include "stock.h"
 
+namespace InvestSpace{
+
 void
 makeLogEntry(Investment* pInv)
 {
@@ -61,4 +63,6 @@ makeInvestment2(InvestmentType invType, Ts&&... params)
         pInv.reset(new Stock(std::forward<Ts>(params)...));
     }
     return pInv;
+}
+
 }

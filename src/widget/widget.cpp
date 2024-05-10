@@ -1,5 +1,4 @@
 #include <cstdio>
-
 #include "widget.h"
 
 
@@ -10,13 +9,10 @@ public:
     WidgetId getId()const{ return _id; }
     void makeLogEntry() const;
     void process();
-    void setWidget(Widget * w){ _widget = w;}
 private:
-    Widget* _widget;
     WidgetId  _id;
-    std::vector<std::shared_ptr<Widget>> _processedWidgets; 
+    std::vector<WidgetId> _processedWidgets; 
 };
-
 
 void
 Widget::WidgetImpl::makeLogEntry() const
@@ -27,7 +23,7 @@ Widget::WidgetImpl::makeLogEntry() const
 void 
 Widget::WidgetImpl::process()
 {
-    _processedWidgets.emplace_back(_widget);
+    _processedWidgets.push_back(getId());
 }
 
 Widget::Widget()
@@ -57,7 +53,6 @@ Widget::makeLogEntry() const
 void 
 Widget::process()
 {
-    _impl->setWidget(this);
     _impl->process();
 } 
 
@@ -72,4 +67,21 @@ void
 WidgetFac::process()
 {
     _processedWidgets.emplace_back(shared_from_this());
+}
+
+void makeLogEntry(std::string text, TimePoint time)
+{
+    std::cout<<text<<" "<<std::chrono::system_clock::to_time_t(time)<<std::endl;
+}
+
+void process(Widget& lvalArg) // process lvalues
+{
+    std::cout<<"Calling lvalue"<<std::endl;
+    lvalArg.process();
+}
+
+void process(Widget&& rvalArg) // process rvalues
+{
+    std::cout<<"Calling rvalue"<<std::endl;
+    rvalArg.process();
 }

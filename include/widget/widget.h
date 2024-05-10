@@ -1,10 +1,14 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <chrono>
+#include <iostream>
 
 using WidgetId = unsigned; 
 
 static WidgetId  currentId;
+
+
 
 
 class Widget: public std::enable_shared_from_this<Widget>{
@@ -45,3 +49,21 @@ private:
     int _id;
     std::vector<std::shared_ptr<WidgetFac>> _processedWidgets; 
 };
+
+
+using TimePoint = std::__1::chrono::system_clock::time_point;
+void makeLogEntry(std::string text, TimePoint time);
+
+void process(Widget& lvalArg); // process lvalues
+
+void process(Widget&& rvalArg); // process rvalues
+
+template<typename T>
+void logAndProcess(T&& param)
+{
+    auto now = std::chrono::system_clock::now();
+    makeLogEntry("Calling 'process'", now);
+    // std::forwar is a conditional cast: it casts to an rvalue
+    // only if the argument was initialized with an rvalue
+    process(std::forward<T>(param));
+}
