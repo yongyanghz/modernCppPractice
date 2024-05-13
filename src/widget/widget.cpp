@@ -26,17 +26,23 @@ Widget::WidgetImpl::process()
     _processedWidgets.push_back(getId());
 }
 
-Widget::Widget()
+Widget::Widget():
+    _impl(new WidgetImpl(), &delWidgetImpl)
 { 
-    _impl = std::make_unique<WidgetImpl>();
 }
     
-Widget::Widget(WidgetId id)
+Widget::Widget(WidgetId id):
+    _impl(new WidgetImpl(id), &delWidgetImpl)
 {
-    _impl = std::make_unique<WidgetImpl>(id); 
 }
  
 Widget::~Widget(){}
+
+void 
+Widget::delWidgetImpl(WidgetImpl* impl)
+{
+    delete impl;
+}
 
 WidgetId 
 Widget::getId() const
@@ -69,6 +75,7 @@ WidgetFac::process()
     _processedWidgets.emplace_back(shared_from_this());
 }
 
+
 void makeLogEntry(std::string text, TimePoint time)
 {
     std::cout<<text<<" "<<std::chrono::system_clock::to_time_t(time)<<std::endl;
@@ -79,6 +86,7 @@ void process(Widget& lvalArg) // process lvalues
     std::cout<<"Calling lvalue"<<std::endl;
     lvalArg.process();
 }
+
 
 void process(Widget&& rvalArg) // process rvalues
 {

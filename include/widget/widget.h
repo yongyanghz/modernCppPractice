@@ -9,13 +9,26 @@ using WidgetId = unsigned;
 static WidgetId  currentId;
 
 
-
-
 class Widget: public std::enable_shared_from_this<Widget>{
 public:
     Widget();
     Widget(WidgetId id);
+    Widget(Widget&& rhs):
+        _name(std::move(rhs._name)),
+        _impl(std::move(rhs._impl)){
+            std::cout<<"Widget move constructor was called!"<<std::endl;
+    }
     ~Widget();
+
+    template<typename T>
+    void setName(T&& newName){              // newName is universal reference
+        _name = std::forward<T>(newName);
+    }
+    template<typename T>
+    void setSignText(T&& text){ // text, is universal referrence
+        _sign = text; // use text, but don't modify it
+        _historySigns += std::forward<T>(text); // foward text the last time use it
+    }
 
     WidgetId getId() const;
     
@@ -23,9 +36,15 @@ public:
     
     void process(); 
 
-private:
     class WidgetImpl;
-    std::unique_ptr<WidgetImpl> _impl; // pimpl idiom
+
+    static void delWidgetImpl(WidgetImpl* impl);
+
+private:
+    std::string _name;
+    std::string _sign;
+    std::string _historySigns;
+    std::unique_ptr<WidgetImpl, void (*)(WidgetImpl*)> _impl; // pimpl idiom
 };
 
 class WidgetFac : public std::enable_shared_from_this<WidgetFac> {
@@ -67,3 +86,4 @@ void logAndProcess(T&& param)
     // only if the argument was initialized with an rvalue
     process(std::forward<T>(param));
 }
+
