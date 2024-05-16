@@ -26,6 +26,7 @@ Matrix::Matrix(int rowNum, int colNum)
 //     return lhs; // copy lhs into return value
 // }
 
+
 void
 Matrix::operator+=(const Matrix& rhs)
 {

@@ -21,6 +21,8 @@ public:
     
     void distinguishUniversalRefFromRValueRef();
     
+    void avoidOverloadingUniversalReferences();
+
     void f0(Widget&& param){ // rvalue reference
         std::cout<<"Hahahha, f0 have been called!"<<std::endl;
     }

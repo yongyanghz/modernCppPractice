@@ -19,9 +19,13 @@ private:
     int _c;
 };
 
-template<typename T>
+template<
+    typename T,
+    typename = typename std::enable_if<
+        std::is_same<Matrix, typename std::decay<T>::type>::value
+        >::type>
 Matrix
-operator+(T&& lhs,  T& rhs)
+operator+(T&& lhs,  const Matrix& rhs)
 {
     lhs += rhs;
     return std::forward<T>(lhs);  // move rvalue into return value, copy lvalue

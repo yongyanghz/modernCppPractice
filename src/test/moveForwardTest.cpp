@@ -6,6 +6,8 @@
 #include "moveForwardTest.h"
 #include "widget.h"
 #include "matrix.h"
+#include "logger.h"
+#include "person.h"
 
 using namespace std::chrono_literals;
 
@@ -23,6 +25,7 @@ MoveForwardTest::run()
     logAndProcess(w); // lvalue
     logAndProcess(std::move(w)); // rvalue
     distinguishUniversalRefFromRValueRef();
+    avoidOverloadingUniversalReferences();
 }
 
 
@@ -69,6 +72,28 @@ MoveForwardTest::distinguishUniversalRefFromRValueRef()
     Matrix m1(4, 5);
     auto m2 = Matrix(4, 5) + m1;
 }
+
+void 
+MoveForwardTest::avoidOverloadingUniversalReferences()
+{
+    Logger myLogger;
+    std::string petName("Darla");
+    myLogger.logAndAdd(petName);
+    myLogger.logAndAdd(std::string("Lanado"));
+    myLogger.logAndAdd("Rala");
+    myLogger.logAndAdd(1001);
+    short nameIdx = 1002;
+    myLogger.logAndAdd(nameIdx);
+
+    const Person p("Nancy");
+    auto cloneofP(p);
+
+    SpecialPerson sp("Lana"); 
+    SpecialPerson sp2(sp); 
+    SpecialPerson sp3(std::move(sp)); 
+}
+
+
 
 
 
