@@ -23,6 +23,10 @@ public:
     >
     explicit Person(T&& n):
         _name(std::forward<T>(n)){
+            static_assert(
+                std::is_constructible<std::string, T>::value, 
+                "Paramter n can't be used to construct a std::string"
+            );
             std::cout<<"Called Person Universal Reference/Template ctor!"<<std::endl;
         }
 

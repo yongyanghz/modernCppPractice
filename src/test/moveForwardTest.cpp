@@ -91,6 +91,8 @@ MoveForwardTest::avoidOverloadingUniversalReferences()
     SpecialPerson sp("Lana"); 
     SpecialPerson sp2(sp); 
     SpecialPerson sp3(std::move(sp)); 
+
+   // Person p2(myLogger); // Test static_assert
 }
 
 
