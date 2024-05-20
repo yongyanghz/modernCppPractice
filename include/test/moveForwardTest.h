@@ -12,6 +12,13 @@ decltype(auto) move(T&& param)
     return static_cast<ReturnType>(param);
 }
 
+struct IPv4Header{
+    std::uint32_t version: 4,
+                  IHL: 4,
+                  DSCP: 6,
+                  ECN: 2,
+                  totalLength: 16;
+};
 
 
 class MoveForwardTest
@@ -25,6 +32,8 @@ public:
 
     void moveMayNotPresentNorCheapNorUsed();
 
+    void perferctForwardFailureCases();
+
     void f0(Widget&& param){ // rvalue reference
         std::cout<<"Hahahha, f0 have been called!"<<std::endl;
     }
@@ -34,6 +43,29 @@ public:
 
     template<typename T>
     void f2(T&& param);  // universal refercence, type deduction, not rvalue referrence
+
+    void printVector(const std::vector<int>& v);
+
+    template<typename T>
+    void print(T&& param){
+        std::cout<<param<<std::endl;
+    }
+
+    template<typename T>
+    void fwd(T&& param){
+        printVector(std::forward<T>(param));
+    }
+    
+    template<typename T>
+    void fwdPrint(T&& param){
+        print(std::forward<T>(param));
+    }
+
+    template<typename... Ts>
+    void fwdVariadic(Ts&&... param){
+        printVector(std::forward<Ts>(param)...);
+    }
+
 };
 
 
@@ -49,4 +81,31 @@ void
 MoveForwardTest::f2(T&& param)
 {
     std::cout<<"Hahahha, f2 have been called!"<<std::endl;
+}
+void funcForCallBackFunc(int (*pf)(int)){
+    int val = 10;
+    std::cout<< "processl val 10: " << pf(val) << std::endl;
+}
+
+    void funcForCallBackFunc2(int pf(int)){
+    int val = 10;
+    std::cout<< "processl val 10: " << pf(val) << std::endl;
+}
+
+int processVal(int value){
+    return value + 1;
+}
+
+int processVal(int value, int priority){
+    return value + 1 + priority;
+}
+
+template<typename T>
+void fwdForCallBackFunc(T&& param){
+    funcForCallBackFunc(std::forward<T>(param));
+}
+
+template<typename T>
+T workOnVal(T param){
+    return param + 1;
 }

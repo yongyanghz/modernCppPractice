@@ -11,6 +11,8 @@ static WidgetId  currentId;
 
 class Widget: public std::enable_shared_from_this<Widget>{
 public:
+    static constexpr std::size_t MinVals = 28;
+
     Widget();
     Widget(WidgetId id);
     Widget(Widget&& rhs):
@@ -86,4 +88,6 @@ void logAndProcess(T&& param)
     // only if the argument was initialized with an rvalue
     process(std::forward<T>(param));
 }
+
+constexpr std::size_t Widget::MinVals;
 

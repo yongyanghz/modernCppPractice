@@ -29,8 +29,8 @@ MoveForwardTest::run()
     distinguishUniversalRefFromRValueRef();
     avoidOverloadingUniversalReferences();
     moveMayNotPresentNorCheapNorUsed();
+    perferctForwardFailureCases();
 }
-
 
 void 
 MoveForwardTest::distinguishUniversalRefFromRValueRef()
@@ -143,7 +143,57 @@ MoveForwardTest::moveMayNotPresentNorCheapNorUsed()
         << "[ns]" << std::endl;
 }
 
+void 
+MoveForwardTest::printVector(const std::vector<int>& v)
+{
+    std::for_each(v.cbegin(), v.cend(), [](const int& entry){
+        printf("%d, ", entry);
+    });
+    printf("\n");
+}
 
+void 
+MoveForwardTest::perferctForwardFailureCases()
+{
+    // 1. Braced initilizers
+    printVector({1, 2, 3});
+    // fwd({1, 2, 3}); // Error: compiler can't deduce type for {1, 2, 3}
+    auto il = {1, 2, 3};
+    fwd(il);  // This works fine, cause il is an intialize list
+
+    // 2. 0 or NULL as null pointers, deduced as integral type
+    // fwd(NULL); //  error: reference to type 'const std::vector<int>' could not bind to an rvalue of type 'long'
+    
+    // 3. Declaration-only integral static const and constexpr data
+    std::vector<int> widgetData;
+    widgetData.reserve(Widget::MinVals); 
+
+    print(Widget::MinVals); // fine, treated as "print(28)"
+    fwdPrint(Widget::MinVals);  // error! shouldn't link, might be link in some compilers, 
+    // better to add definition in cpp file for Widget::MinVals
+
+    // 4. Overloaded function names and template names
+    funcForCallBackFunc(processVal); // fine
+    funcForCallBackFunc2(processVal); // fine
+    // fwdForCallBackFunc(processsVal); // error! which processVal?
+    // fwdForCallBackFunc(workOnVal);      // error! workOnVal is template function, which workOnVal instantiation?
+    // workaround:
+    using ProcessFuncType = int (*)(int);
+    ProcessFuncType processValPtr = processVal;
+    fwdForCallBackFunc(processValPtr);  // fine
+    fwdForCallBackFunc(static_cast<ProcessFuncType>(workOnVal)); // also fine
+
+    // 5. Bitfields
+    IPv4Header h;
+    processVal(h.totalLength);
+    // print is template function using universal reference.
+    // print(h.totalLength);  error: non-const reference cannot bind to bit-field 'totalLength'
+    // fwdPrint(h.totalLength); // error: non-const reference cannot bind to bit-field 'totalLength'
+    // workaround:
+    auto len = h.totalLength; // copy bitfiled value
+    print(len);
+    fwdPrint(len);
+}
 
 
 
