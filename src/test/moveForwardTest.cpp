@@ -195,7 +195,22 @@ MoveForwardTest::perferctForwardFailureCases()
     fwdPrint(len);
 }
 
+int processVal(int value){
+    return value + 1;
+}
 
+int processVal(int value, int priority){
+    return value + 1 + priority;
+}
 
+void funcForCallBackFunc(int (*pf)(int)){
+    int val = 10;
+    std::cout<< "processl val 10: " << pf(val) << std::endl;
+}
+
+void funcForCallBackFunc2(int pf(int)){
+    int val = 10;
+    std::cout<< "processl val 10: " << pf(val) << std::endl;
+}
 
 

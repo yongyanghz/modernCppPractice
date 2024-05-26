@@ -82,23 +82,13 @@ MoveForwardTest::f2(T&& param)
 {
     std::cout<<"Hahahha, f2 have been called!"<<std::endl;
 }
-void funcForCallBackFunc(int (*pf)(int)){
-    int val = 10;
-    std::cout<< "processl val 10: " << pf(val) << std::endl;
-}
+void funcForCallBackFunc(int (*pf)(int));
 
-    void funcForCallBackFunc2(int pf(int)){
-    int val = 10;
-    std::cout<< "processl val 10: " << pf(val) << std::endl;
-}
+void funcForCallBackFunc2(int pf(int));
 
-int processVal(int value){
-    return value + 1;
-}
+int processVal(int value);
 
-int processVal(int value, int priority){
-    return value + 1 + priority;
-}
+int processVal(int value, int priority);
 
 template<typename T>
 void fwdForCallBackFunc(T&& param){

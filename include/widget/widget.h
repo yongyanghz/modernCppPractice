@@ -8,6 +8,10 @@ using WidgetId = unsigned;
 
 static WidgetId  currentId;
 
+using FilterContainer = 
+    std::vector<std::function<bool(int)>>;
+
+
 
 class Widget: public std::enable_shared_from_this<Widget>{
 public:
@@ -64,11 +68,18 @@ public:
     
     void process(); 
 
+    void addFilter(FilterContainer &filters);
+
+    bool isValidated() const { return true; }
+    bool isProcessed() const { return true; }
+    bool isArchived() const { return true; }
+
 private:
-    WidgetFac(): _id(currentId++){}
+    WidgetFac(): _id(currentId++), _divisor(10){}
 
     int _id;
     std::vector<std::shared_ptr<WidgetFac>> _processedWidgets; 
+    int _divisor;
 };
 
 

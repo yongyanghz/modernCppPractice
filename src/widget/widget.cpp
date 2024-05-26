@@ -75,6 +75,39 @@ WidgetFac::process()
     _processedWidgets.emplace_back(shared_from_this());
 }
 
+void 
+WidgetFac::addFilter(FilterContainer &filters)
+{
+    // Capture only to non-static local variables
+
+    // error: 'this' cannot be implicitly captured in this context
+    // filters.emplace_back([](int value){
+    //     return value % _divisor == 0;
+    // });
+    
+    // error: 'this' cannot be implicitly captured in this context
+    // filters.emplace_back([_divisor](int value){
+    //     return value % _divisor == 0;
+    // });
+
+    // filters.emplace_back([=](int value){
+    //     return value % _divisor == 0;
+    // });
+    // What's captured in default by value is this pointer
+    // auto currentObjectPtr = this;
+    // filters.emplace_back([currentObjectPtr](int value){
+    //     return value % currentObjectPtr->_divisor == 0;
+    // });
+
+    auto divisor = _divisor;            // copy data memeber
+    filters.emplace_back([=](int value){
+        return value % divisor == 0;    // capture the copoy
+    });
+
+
+    
+}
+
 
 void makeLogEntry(std::string text, TimePoint time)
 {
